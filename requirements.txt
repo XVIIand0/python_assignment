@@ -1,0 +1,7 @@
+requests
+load_dotenv
+fastapi
+uvicorn
+psycopg2
+sqlalchemy
+sqlmodel

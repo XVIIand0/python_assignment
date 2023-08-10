@@ -66,15 +66,15 @@ def saveToDB(data):
         except SQLAlchemyError as error:
             session.rollback()
             raise error
+def init():
+  try:
+    ibm_raw_data = getStackData('TIME_SERIES_DAILY', 'IBM')
+    apple_raw_data = getStackData('TIME_SERIES_DAILY', 'AAPL')
+    ibm_formattedData = formatRaw(ibm_raw_data)
+    saveToDB(ibm_formattedData)
+    apple_formattedData = formatRaw(apple_raw_data)
+    saveToDB(apple_formattedData)
 
-try:
-  ibm_raw_data = getStackData('TIME_SERIES_DAILY', 'IBM')
-  apple_raw_data = getStackData('TIME_SERIES_DAILY', 'AAPL')
-  ibm_formattedData = formatRaw(ibm_raw_data)
-  saveToDB(ibm_formattedData)
-  apple_formattedData = formatRaw(apple_raw_data)
-  saveToDB(apple_formattedData)
-
-except ValueError as err:
-  print(err.args)
-
+  except ValueError as err:
+    print(err.args)
+init()

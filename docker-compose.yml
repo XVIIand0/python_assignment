@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  fastapi:
+    env_file:
+      - prod.env
+    ports:
+      - "5000:5000"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+
+  financial_db:
+    image: postgis/postgis
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: financial_data
+    volumes:
+      - ./db:/var/lib/postgresql/data

@@ -12,10 +12,6 @@ load_dotenv()
 API_KEY = os.getenv('API_KEY')
 DB_URL = os.getenv('DB_URL')
 
-# create DB if not existed
-engine = create_engine(DB_URL)
-SQLModel.metadata.create_all(engine)
-
 query_url = 'https://www.alphavantage.co/query'
 
 def getStackData(function_name, symbol):
@@ -23,8 +19,9 @@ def getStackData(function_name, symbol):
   r = requests.get(query_url, params = params)
   data = r.json()
   # check data is matched, or throw error
-  if data['Meta Data']['2. Symbol'] != symbol:
-    raise ValueError('Symbol not matched!')
+  # Todo: request too many times, not retried when failed
+  if 'Meta Data' not in data:
+    raise ValueError('Response error, please check')
   else:
     # print(data)
     return data
@@ -41,7 +38,7 @@ def formatRaw(raw_data):
   for key, value in raw_data['Time Series (Daily)'].items():
     formated_data.append({'symbol': symbol, 'date': key, 'open_price': value['1. open'], 'close_price': value['4. close'], 'volume': value['5. volume']})
   return formated_data
-def saveToDB(data):
+def saveToDB(data, engine):
   with Session(engine) as session:
     for record in data:
       date = datetime.strptime(record['date'], '%Y-%m-%d')
@@ -67,14 +64,20 @@ def saveToDB(data):
             session.rollback()
             raise error
 def init():
+  # create DB if not existed
+  engine = create_engine(DB_URL)
+  # SQLModel.metadata.create_all(engine)
   try:
     ibm_raw_data = getStackData('TIME_SERIES_DAILY', 'IBM')
     apple_raw_data = getStackData('TIME_SERIES_DAILY', 'AAPL')
     ibm_formattedData = formatRaw(ibm_raw_data)
-    saveToDB(ibm_formattedData)
+    saveToDB(ibm_formattedData, engine)
     apple_formattedData = formatRaw(apple_raw_data)
-    saveToDB(apple_formattedData)
+    saveToDB(apple_formattedData, engine)
 
   except ValueError as err:
     print(err.args)
-init()
+if __name__ == "__main__":
+  # stuff only to run when not called via 'import' here
+  init()
+# asyncio.run(init())

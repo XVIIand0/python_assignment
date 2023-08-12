@@ -4,7 +4,7 @@ from financial import api
 
 from get_raw_data import init
 
-init()
+
 
 app = FastAPI()
 app.add_middleware(
@@ -14,6 +14,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+def on_startup():
+    init()
 
 app.include_router(api.router, prefix="/api")
 

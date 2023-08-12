@@ -4,19 +4,23 @@ services:
   fastapi:
     env_file:
       - prod.env
+    command: uvicorn main:app --host 0.0.0.0 --port 5000
     ports:
       - "5000:5000"
     build:
       context: ./
       dockerfile: Dockerfile
+    depends_on:
+      - financialdb
+    restart: always
 
-  financial_db:
+  financialdb:
     image: postgis/postgis
-    ports:
-    - 5432:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: financial_data
+    ports:
+      - "5432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data

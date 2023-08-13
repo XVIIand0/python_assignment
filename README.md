@@ -21,20 +21,20 @@ A python3.11 project for G123 assignment, use FastAPI and Postgres to complete i
 
 ## Setting up env by requirement.txt
     Run 
-    ```bash
+    ```
     pip install --no-cache-dir -r requirements.txt
     ```
 
 ### Running FastAPI and PostgresSQL by docker-compose.(Recommended)
     Run
-    ```bash
+    ```
     docker-compose up
     ```
 
 ## Collectiong stock data from alphavantage.
 The `get_raw_data.py` file in root folder, will start collecting data from alphavantage, and store them in db.
     Run 
-    ```bash
+    ```
     python get_raw_data.py
     ```
 
@@ -48,7 +48,7 @@ The `get_raw_data.py` file in root folder, will start collecting data from alpha
 
 ## Running a FastAPI server, when server started, will automatically collecting data.
     Run (Require Postgres db)
-    ```bash
+    ```
     uvicorn main:app --host 0.0.0.0 --port 5000
     ```
 

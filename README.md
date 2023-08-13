@@ -1,6 +1,7 @@
 # Take-Home Assignment
 
 A python3.11 project for G123 assignment, use FastAPI and Postgres to complete it. Also need docker supported.
+FastAPI will provide 3 APIs for calling stock data, and statistics. Could be check in http://localhost:5000/docs#/ when server up.
 
 ## Structure    
     .

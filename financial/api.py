@@ -12,7 +12,7 @@ load_dotenv()
 DB_URL = os.getenv('DB_URL')
 
 
-router = APIRouter(prefix="/finance", tags=["finance"])
+router = APIRouter()
 # create DB if not existed
 engine = create_engine(DB_URL)
 
@@ -71,6 +71,7 @@ async def get_records_by_conditions(start_date: str | None = None, end_date: str
 @router.get("/statistics")
 async def get_statistics(start_date: str, end_date: str , symbol: str):
     with Session(engine) as session:
+        # get avg data by sql cmd
         statement = select(func.avg(financial_data.open_price).label('average_daily_open_price'), func.avg(financial_data.close_price).label('average_daily_close_price'), func.avg(financial_data.volume).label('average_daily_volume'))
         where_array = []
         error = ''

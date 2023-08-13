@@ -66,7 +66,7 @@ def saveToDB(data, engine):
 def init():
   # create DB if not existed
   engine = create_engine(DB_URL)
-  # SQLModel.metadata.create_all(engine)
+  SQLModel.metadata.create_all(engine)
   try:
     ibm_raw_data = getStackData('TIME_SERIES_DAILY', 'IBM')
     apple_raw_data = getStackData('TIME_SERIES_DAILY', 'AAPL')
